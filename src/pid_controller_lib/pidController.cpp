@@ -148,11 +148,14 @@ double pidController::step( double dt, double sp, double x, double x_dot ) {
 	if( dt > 0.0 ) {
 		d_term = kd_ * x_dot_;
 
-		//Integrate over dt
-		integrator_ += error * dt;
+		//If the integrator is enabled
+		if(ki_ != 0.0) {
+			//Integrate over dt
+			integrator_ += error * dt;
 
-		//Calculate I term
-		i_term = ki_ * integrator_;
+			//Calculate I term
+			i_term = ki_ * integrator_;
+		}
 	}
 
 	//Sum three terms: u = p_term + i_term - d_term
