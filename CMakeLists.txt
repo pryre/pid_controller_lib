@@ -105,7 +105,7 @@ generate_dynamic_reconfigure_options(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-# CATKIN_DEPENDS nav_msgs roscpp
+  CATKIN_DEPENDS dynamic_reconfigure
 #  DEPENDS Eigen3
 )
 
