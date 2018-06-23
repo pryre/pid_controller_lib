@@ -115,10 +115,13 @@ double pidController::step( double dt, double sp, double x) {
 
 	//If it is a stale controller, just skip this section
 	if( dt > 0.0 ) {
-		d_term = kd_ * ( (error - e_prev_) / dt );
+		//If the derivative is enabled
+		if(kd_ > 0.0) {
+			d_term = kd_ * ( (error - e_prev_) / dt );
+		}
 
 		//If the integrator is enabled
-		if(ki_ != 0.0) {
+		if(ki_ > 0.0) {
 			//Integrate over dt
 			integrator_ += error * dt;
 
