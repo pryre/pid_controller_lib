@@ -131,7 +131,7 @@ double pidController::step( double dt, double sp, double x) {
 	}
 
 	//Sum three terms: u = p_term + i_term - d_term
-	double u = p_term - d_term;
+	double u = p_term + d_term;
 	double ui = u + i_term;
 
 	//Output Saturation
@@ -139,7 +139,7 @@ double pidController::step( double dt, double sp, double x) {
 
 	//Integrator anti-windup
 	//If the pid controller has saturated and if the integrator is the cause
-	if( ( ui != u_sat ) && ( fabs( i_term ) > fabs( u_sat - u ) ) )
+	if( ( ui != u_sat ) && (ki_ > 0.0) && ( fabs( i_term ) > fabs( u_sat - u ) ) )
 			integrator_ = ( u_sat - u ) / ki_;	//Trim the integrator to what it should currently be to only just hit the maximum
 
 	//Set output
