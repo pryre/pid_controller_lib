@@ -9,7 +9,7 @@
 
 class pidController {
 	private:
-		ros::NodeHandle *nhp_;
+		ros::NodeHandle nh_;
 		dynamic_reconfigure::Server<pid_controller_lib::ControlParamsConfig> dyncfg_control_params_;
 
 		double kp_;
@@ -28,8 +28,8 @@ class pidController {
 		double e_prev_;			//Previous calculated error
 
 	public:
-		pidController(ros::NodeHandle *nhp, std::string name);
-		pidController(ros::NodeHandle *nhp, std::string name, double initial_x, double initial_setpoint, double initial_output );
+		pidController(const ros::NodeHandle& nh = ros::NodeHandle("~"));
+		pidController(const ros::NodeHandle& nh, double initial_x, double initial_setpoint, double initial_output );
 		~pidController();
 
 		void reset();
@@ -49,6 +49,7 @@ class pidController {
 		double getOutputMin();
 		double getOutputMax();
 		double getOutput();
+		double getOutputIterm();
 
 		void callback_cfg_params(pid_controller_lib::ControlParamsConfig &config, uint32_t level);
 };

@@ -8,9 +8,9 @@
 #include <string>
 #include <math.h>
 
-pidController::pidController(ros::NodeHandle *nhp, std::string name) :
-	nhp_(nhp),
-	dyncfg_control_params_(ros::NodeHandle(*nhp, name)),
+pidController::pidController(const ros::NodeHandle& nh) :
+	nh_(nh),
+	dyncfg_control_params_(nh),
 	kp_( 0.0 ),
 	ki_( 0.0 ),
 	kd_( 0.0 ),
@@ -24,9 +24,9 @@ pidController::pidController(ros::NodeHandle *nhp, std::string name) :
 	reset();
 }
 
-pidController::pidController(ros::NodeHandle *nhp, std::string name, double initial_x, double initial_setpoint, double initial_output ) :
-	nhp_(nhp),
-	dyncfg_control_params_(ros::NodeHandle(*nhp, name)),
+pidController::pidController(const ros::NodeHandle& nh, double initial_x, double initial_setpoint, double initial_output ) :
+	nh_(nh),
+	dyncfg_control_params_(nh),
 	kp_( 0.0 ),
 	ki_( 0.0 ),
 	kd_( 0.0 ),
