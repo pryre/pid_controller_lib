@@ -53,6 +53,9 @@ void pidController::reset( double x_prev ) {
 	integrator_ = 0.0;
 	x_prev_ = x_prev;
 	e_prev_ = 0.0;
+
+	control_output_ = 0.0;
+	control_output_i_ = 0.0;
 }
 
 void pidController::setKp( double Kp ) {
@@ -144,6 +147,7 @@ double pidController::step( double dt, double sp, double x) {
 
 	//Set output
 	control_output_ = u_sat;
+	control_output_i_ = ki_ * integrator_; //Saturated integrator term
 
 	//Save last state
 	x_prev_ = x;
@@ -174,6 +178,10 @@ double pidController::getOutputMax() {
 
 double pidController::getOutput() {
 	return control_output_;
+}
+
+double pidController::getOutputIterm() {
+	return control_output_i_;
 }
 
 void pidController::callback_cfg_params(pid_controller_lib::ControlParamsConfig &config, uint32_t level) {

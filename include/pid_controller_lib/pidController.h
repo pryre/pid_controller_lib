@@ -19,9 +19,10 @@ class pidController {
 		double output_max_;
 		double output_min_;
 
-		double x_;				//Current state
-		double sp_;				//Curret setpoint
-		double control_output_;	//Latest control output
+		double x_;					//Current state
+		double sp_;					//Curret setpoint
+		double control_output_;		//Latest control output
+		double control_output_i_;	//Latest control output integrator component
 
 		double integrator_;
 		double x_prev_;			//Previous state
