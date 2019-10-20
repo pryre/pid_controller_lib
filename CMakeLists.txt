@@ -91,6 +91,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
 generate_dynamic_reconfigure_options(
   cfg/ControlParams.cfg
+  cfg/ControlTrackingParams.cfg
 )
 
 ###################################
@@ -104,7 +105,7 @@ generate_dynamic_reconfigure_options(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}
+  LIBRARIES ${PROJECT_NAME} ${PROJECT_NAME}_tracking
   CATKIN_DEPENDS dynamic_reconfigure
 #  DEPENDS Eigen3
 )
@@ -126,10 +127,15 @@ add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/pidController.cpp
 )
 
+add_library(${PROJECT_NAME}_tracking
+  src/${PROJECT_NAME}/pidTrackingController.cpp
+)
+
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_gencfg)
+add_dependencies(${PROJECT_NAME}_tracking ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_gencfg)
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
