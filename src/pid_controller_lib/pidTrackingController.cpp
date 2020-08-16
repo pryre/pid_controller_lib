@@ -14,6 +14,8 @@ pidTrackingController::pidTrackingController(const ros::NodeHandle& nh) :
 	Kp_( 0.0 ),
 	Ki_( 0.0 ),
 	Kd_( 0.0 ),
+	w0_(0.0),
+	rki_(0.0),
 	output_min_( 0.0 ),
 	output_max_( 0.0 ),
 	x_( 0.0 ),
@@ -32,6 +34,8 @@ pidTrackingController::pidTrackingController(const ros::NodeHandle& nh, double i
 	Kp_( 0.0 ),
 	Ki_( 0.0 ),
 	Kd_( 0.0 ),
+	w0_(0.0),
+	rki_(0.0),
 	output_min_( 0.0 ),
 	output_max_( 0.0 ),
 	x_( initial_x ),
@@ -59,21 +63,22 @@ void pidTrackingController::reset( double x_prev ) {
 	control_output_i_ = 0.0;
 }
 
-void pidTrackingController::setw0( double w0, bool update_ki ) {
+void pidTrackingController::setw0( double w0, bool update_Ki ) {
 	w0_ = w0;
 
 	Kp_ = w0*w0;
 	Kd_ = 2.0*w0;
 
-	if( update_ki )
-		setki(ki_);
+	if( update_Ki )
+		setrki(rki_);
 }
 
-void pidTrackingController::setki( double ki ) {
+void pidTrackingController::setrki( double rki ) {
 	//XXX: ki Should not be set more than 0.5! Will cause instabilities
-	double Ki = ki*Kp_;
+	rki_ = rki;
+	double Ki = rki*Kp_;
 
-	if(ki == 0.0) {
+	if(Ki == 0.0) {
 		//Clear the integrator so it starts fresh
 		integrator_ = 0.0;
 	} else if (Ki_ != 0.0) {
@@ -81,13 +86,12 @@ void pidTrackingController::setki( double ki ) {
 		integrator_ *= (Ki_ / Ki);
 	}
 
-	ki_ = ki;
 	Ki_ = Ki;
 }
 
-void pidTrackingController::setGains( double w0, double ki ) {
+void pidTrackingController::setGains( double w0, double rki ) {
 	setw0( w0, false );
-	setki( ki );
+	setrki( rki );
 }
 
 bool pidTrackingController::setOutputMinMax( double min, double max ) {
@@ -188,7 +192,7 @@ double pidTrackingController::getOutputIterm() {
 }
 
 void pidTrackingController::callback_cfg_params(pid_controller_lib::ControlTrackingParamsConfig &config, uint32_t level) {
-	setGains(config.w0, config.ki);
+	setGains(config.w0, config.rki);
 
 	if(!setOutputMinMax(config.min, config.max))
 		ROS_ERROR("Invalid min/max config, ignoring");

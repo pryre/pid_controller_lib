@@ -16,7 +16,7 @@ class pidTrackingController {
 		double Ki_;
 		double Kd_;
 		double w0_;
-		double ki_;
+		double rki_;
 
 		double output_max_;
 		double output_min_;
@@ -40,9 +40,9 @@ class pidTrackingController {
 		void reset();
 		void reset( double x_prev );
 
-		void setw0( double w0, bool update_ki = true );
-		void setki( double ki );
-		void setGains( double w0, double ki );
+		void setw0( double w0, bool update_Ki = true );
+		void setrki( double rki );
+		void setGains( double w0, double rki );
 		bool setOutputMinMax( double min, double max );
 
 		double step( double dt, double r, double rd, double x, double xd );
